@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Administrativo - Sistema de Notas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css?v=auditoria-2026-10-15-r1">
+</head>
+<!-- V6.9: selectores de curso funcionales en formularios dinámicos -->
+<body class="admin-body">
+<header class="encabezado admin-header">
+  <div class="contenedor-encabezado">
+    <button type="button" id="btnMenuDirectorV75" class="v75-menu-button" aria-label="Abrir menú del Director" aria-controls="menuDirectorV75" aria-expanded="false" hidden>☰ <span>Menú</span></button>
+    <button type="button" id="btnMenuProfesorV77" class="v77-menu-button" aria-label="Abrir menú del Profesor" aria-controls="menuProfesorV77" aria-expanded="false" title="Abrir menú" hidden>☰</button>
+    <div class="logo">
+      <img class="logo-institucional" src="assets/logo-original.png" alt="Logo institucional">
+      <div class="texto-logo">
+        <h1 id="tituloPanel">Panel Administrativo</h1>
+        <p id="subtituloPanel">Gestión Académica · 2026</p>
+      </div>
+    </div>
+    <div class="acciones-header">
+      <span id="nombreUsuario" class="usuario-header"></span>
+      <span id="estadoConexionDirector" class="estado-conexion-director" hidden>● Conectado</span>
+      <button id="btnTema" class="boton-header boton-tema" type="button" aria-label="Activar modo oscuro" title="Cambiar tema" hidden><svg class="tema-icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"/></svg><span>Oscuro</span></button>
+      <button id="btnCerrarSesion" class="boton-header" hidden onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </div>
+</header>
+
+<main class="contenedor-principal">
+  <section id="vistaLogin" class="login-shell seccion-login">
+  <div class="login-visual">
+    <div class="visual-top"><div class="brand-mark"><img src="assets/logo-original.png" alt="Escudo de la Unidad Educativa Germán Busch"></div><div class="visual-brand-copy"><strong>U.E. GERMÁN BUSCH</strong><span>UNIDAD EDUCATIVA · GESTIÓN 2026</span></div></div>
+    <div class="visual-copy"><span class="eyebrow light">PLATAFORMA INSTITUCIONAL</span><h1>Una gestión<br>académica <em>más clara.</em></h1><p>Un espacio centralizado para organizar la información escolar, acompañar el aprendizaje y facilitar el trabajo de dirección y docentes.</p></div>
+    <div class="visual-bottom"><span class="dot-pulse"></span><span>Sistema de gestión académica</span><span>Germán Busch</span></div>
+    <span class="visual-orb orb-one"></span><span class="visual-orb orb-two"></span>
+  </div>
+  <div class="login-side"><div class="login-card">
+    <div class="login-heading"><span class="eyebrow">BIENVENIDO DE NUEVO</span><h2>Inicia sesión</h2><p>Ingresa con las credenciales de tu cuenta institucional.</p></div>
+    <form id="formLogin" onsubmit="iniciarSesion(event)">
+      <label for="loginEmail">Correo electrónico</label><div class="input-wrap"><span class="input-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="m4.5 7 7.5 6 7.5-6"/></svg></span><input type="email" id="loginEmail" autocomplete="username" placeholder="nombre@institucion.edu" required></div>
+      <div class="label-row"><label for="loginPassword">Contraseña</label></div><div class="input-wrap"><span class="input-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><input type="password" id="loginPassword" autocomplete="current-password" placeholder="Ingresa tu contraseña" required><button type="button" id="togglePassword" class="show-password" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg></button></div>
+      <div id="errorLogin" class="form-message" role="status" hidden></div>
+      <button type="submit" class="primary-button login-submit">Entrar a la plataforma <span>→</span></button>
+    </form>
+    <p class="login-legal">Acceso exclusivo para personal autorizado.<br>Si no puedes ingresar, contacta al administrador del sistema.</p>
+  </div></div>
+</section>
+
+  <section id="vistaDashboard" class="dashboard-admin" hidden>
+    <!-- V7.5: menú exclusivo del Director, dentro del panel y nunca en el login -->
+    <div id="menuDirectorV75" class="v75-menu-overlay" hidden>
+      <aside class="v75-drawer" role="dialog" aria-modal="true" aria-label="Menú del Director">
+        <div class="v75-drawer-head">
+          <div><strong>Director General</strong><small>Cuenta y seguridad</small></div>
+          <button type="button" id="cerrarMenuDirectorV75" class="v75-close" aria-label="Cerrar menú">×</button>
+        </div>
+        <nav class="v75-drawer-nav v75-main-nav" aria-label="Navegación principal">
+          <span class="v75-nav-caption">NAVEGACIÓN</span>
+          <button type="button" data-director-tab="inicio">▦ <span>Dashboard</span></button>
+          <button type="button" data-director-tab="estudiantes">♙ <span>Estudiantes</span></button>
+          <button type="button" data-director-tab="profesores">♧ <span>Profesores</span></button>
+          <button type="button" data-director-tab="materias">▤ <span>Materias</span></button>
+          <button type="button" data-director-tab="cursos">▦ <span>Cursos y paralelos</span></button>
+          <span class="v75-nav-caption v75-account-caption">CUENTA</span>
+          <button type="button" id="abrirPerfilDirectorV75"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c.7-4 3.2-6 7.5-6s6.8 2 7.5 6"/></svg><span>Mi perfil</span></button>
+          <button type="button" id="abrirPasswordDirectorV75"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="m11 12 8-8 2 2-2 2 2 2-3 3-2-2-2 2"/></svg><span>Cambiar contraseña</span></button>
+        </nav>
+        <div class="v75-drawer-footer">
+          <button type="button" id="cerrarSesionDirectorV75"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/></svg><span>Cerrar sesión</span></button>
+        </div>
+      </aside>
+    </div>
+
+    <div id="perfilDirectorV75" class="v75-inline-panel" hidden>
+      <div class="v75-inline-card" aria-labelledby="perfilTituloV75">
+        <div class="v75-inline-head">
+          <h2 id="perfilTituloV75">Mi perfil</h2>
+          <button type="button" class="v75-close" data-close-dialog="perfilDirectorV75" aria-label="Cerrar">×</button>
+        </div>
+        <form id="formPerfilDirectorV75" class="v75-form">
+          <label for="perfilNombreV75">Nombre</label>
+          <input id="perfilNombreV75" required>
+          <button type="submit" class="boton-buscar">Guardar cambios</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="passwordDirectorV75" class="v75-inline-panel" hidden>
+      <div class="v75-inline-card" aria-labelledby="passwordTituloV75">
+        <div class="v75-inline-head">
+          <h2 id="passwordTituloV75">Cambiar contraseña</h2>
+          <button type="button" class="v75-close" data-close-dialog="passwordDirectorV75" aria-label="Cerrar">×</button>
+        </div>
+        <form id="formPasswordDirectorV75" class="v75-form">
+          <label for="perfilPassV75">Nueva contraseña</label>
+          <input id="perfilPassV75" type="password" minlength="8" autocomplete="new-password" required>
+          <label for="perfilPass2V75">Confirmar contraseña</label>
+          <input id="perfilPass2V75" type="password" minlength="8" autocomplete="new-password" required>
+          <button type="submit" class="boton-buscar">Cambiar contraseña</button>
+        </form>
+      </div>
+    </div>
+    <!-- V7.7 — Menú exclusivo del Profesor/Tutor -->
+    <div id="menuProfesorV77" class="v77-menu-overlay" hidden>
+      <aside class="v77-drawer" role="dialog" aria-modal="true" aria-label="Menú del Profesor">
+        <div class="v77-drawer-head">
+          <div><strong id="menuProfesorNombreV77">Profesor / Tutor</strong><small>Cuenta y sesión</small></div>
+          <button type="button" id="cerrarMenuProfesorV77" class="v77-close" aria-label="Cerrar">×</button>
+        </div>
+        <nav class="v75-drawer-nav v77-profesor-nav" aria-label="Navegación del profesor">
+          <span class="v75-nav-caption">MENÚ PRINCIPAL</span>
+          <button type="button" data-profesor-accion="inicio">▦ <span>Inicio</span></button>
+          <button type="button" data-profesor-accion="estudiantes">♙ <span>Mis estudiantes</span></button>
+          <button type="button" data-profesor-accion="notas"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4H5v16h14V9Z"/><path d="M14 4v5h5M8 13h8M8 16h6"/></svg><span>Registrar notas</span></button>
+          <button type="button" data-profesor-accion="actualizar">↻ <span>Actualizar información</span></button>
+          <button type="button" data-profesor-accion="perfil"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c.7-4 3.2-6 7.5-6s6.8 2 7.5 6"/></svg><span>Editar perfil</span></button>
+        </nav>
+        <div class="v77-drawer-footer">
+          <button type="button" id="cerrarSesionProfesorV77"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4M8 12h10"/></svg><span>Cerrar sesión</span></button>
+        </div>
+      </aside>
+    </div>
+
+    <aside id="sidebarDirectorDashboard" class="gb-sidebar" hidden aria-label="Navegación administrativa">
+      <div class="gb-sidebar-brand"><span class="gb-brand-mark"><img src="assets/logo-original.png" alt="Logo Germán Busch"></span><div><strong>Germán Busch</strong><small>Panel académico</small></div></div>
+      <div class="gb-nav-label">MENÚ PRINCIPAL</div>
+      <nav class="gb-side-nav">
+        <button type="button" class="gb-side-link is-active" data-tab="inicio" onclick="cambiarPestaña('inicio')"><span>▦</span> Dashboard</button>
+        <button type="button" class="gb-side-link" data-tab="estudiantes" onclick="cambiarPestaña('estudiantes')"><span>♙</span> Estudiantes</button>
+        <button type="button" class="gb-side-link" data-tab="profesores" onclick="cambiarPestaña('profesores')"><span>♧</span> Profesores</button>
+        <button type="button" class="gb-side-link" data-tab="materias" onclick="cambiarPestaña('materias')"><span>▤</span> Materias</button>
+        <button type="button" class="gb-side-link" data-tab="cursos" onclick="cambiarPestaña('cursos')"><span>▦</span> Cursos y paralelos</button>
+      </nav>
+      <div class="gb-sidebar-bottom"><div class="gb-sidebar-note"><span class="gb-live-dot"></span><div><strong>Sistema operativo</strong><small>Gestión académica 2026</small></div></div><button type="button" class="gb-side-logout" onclick="cerrarSesion()"><span>↪</span> Cerrar sesión</button></div>
+    </aside>
+    <aside id="sidebarProfesorDashboard" class="gb-sidebar gb-profesor-sidebar" hidden aria-label="Navegación del profesor">
+      <div class="gb-sidebar-brand"><span class="gb-brand-mark"><img src="assets/logo-original.png" alt="Logo Germán Busch"></span><div><strong>Germán Busch</strong><small>Panel del profesor</small></div></div>
+      <div class="gb-nav-label">MENÚ PRINCIPAL</div>
+      <nav class="gb-side-nav" aria-label="Opciones del profesor">
+        <button type="button" class="gb-side-link is-active" data-profesor-accion="inicio"><span>⌂</span> Mi curso</button>
+        <button type="button" class="gb-side-link" data-profesor-accion="estudiantes"><span>♙</span> Mis estudiantes</button>
+        <button type="button" class="gb-side-link" data-profesor-accion="notas"><span>✎</span> Agregar / editar notas</button>
+        <button type="button" class="gb-side-link" data-profesor-accion="perfil"><span><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c.7-4 3.2-6 7.5-6s6.8 2 7.5 6"/></svg></span> Editar perfil</button>
+        <button type="button" class="gb-side-link" data-profesor-accion="actualizar"><span>↻</span> Actualizar información</button>
+      </nav>
+      <div class="gb-sidebar-bottom">
+        <div class="gb-sidebar-note"><span class="gb-live-dot"></span><div><strong>Sesión activa</strong><small>Gestión académica 2026</small></div></div>
+        <button type="button" class="gb-side-logout" id="cerrarSesionProfesorSidebarV77"><span>↪</span> Cerrar sesión</button>
+      </div>
+    </aside>
+    <div class="gb-dashboard-content">
+    <div class="bienvenida-admin">
+      <div>
+        <span class="eyebrow">Sistema académico</span>
+        <h2 id="saludoUsuario">Bienvenido</h2>
+        <p id="descripcionRol">Gestiona la información académica.</p>
+      </div>
+      <span id="badgeRol" class="badge-rol"></span>
+    </div>
+
+    <div id="navDirector" class="filtro-campos admin-nav">
+      <div class="botones-filtro">
+        <button id="tabInicio" class="filtro-activo" onclick="cambiarPestaña('inicio')">Inicio</button>
+        <button id="tabProfesores" onclick="cambiarPestaña('profesores')">Profesores</button>
+        <button id="tabEstudiantes" onclick="cambiarPestaña('estudiantes')">Estudiantes</button>
+        <button id="tabMaterias" onclick="cambiarPestaña('materias')">Materias</button>
+        <button id="tabCursos" onclick="cambiarPestaña('cursos')">Cursos</button>
+      </div>
+    </div>
+
+    <!-- V7.7 — Dashboard Profesor/Tutor -->
+    <section id="dashboardProfesorV77" class="profesor-dashboard-v77" hidden>
+      <section class="profesor-info-v77" id="resumenProfesorV77">
+        <div>
+          <span class="eyebrow">Profesor / Tutor</span>
+          <h2>Mi curso</h2>
+        </div>
+        <div class="curso-asignado-v77">
+          <span>Curso asignado</span>
+          <strong id="profesorCursoV77">—</strong>
+        </div>
+      </section>
+
+      <section class="profesor-estudiantes-v77" id="seccionEstudiantesProfesorV77">
+        <div class="profesor-seccion-head-v77">
+          <div>
+            <span class="eyebrow">Estudiantes</span>
+            <h2>Mis estudiantes</h2>
+            <p>Selecciona un estudiante para agregar o editar sus notas.</p>
+          </div>
+          <span id="contadorEstudiantesV77" class="contador-v77">0 estudiantes</span>
+        </div>
+        <div class="profesor-buscador-v77">
+          <label for="buscarEstudianteProfesorV77">Buscar estudiante</label>
+          <input id="buscarEstudianteProfesorV77" type="search" placeholder="Nombre o CI..." autocomplete="off">
+        </div>
+        <div id="listaEstudiantesProfesorV77" class="lista-estudiantes-v77"></div>
+      </section>
+
+      <section id="editorNotasProfesorV77" class="editor-notas-v77" hidden>
+        <div class="profesor-seccion-head-v77">
+          <div>
+            <span class="eyebrow">Editor de notas</span>
+            <h2>Calificaciones</h2>
+            <p>Completa los tres trimestres de la materia seleccionada.</p>
+          </div>
+        </div>
+
+        <div class="editor-grid-v77">
+          <div class="campo-editor-v77">
+            <label for="editorEstudianteV77">Estudiante</label>
+            <select id="editorEstudianteV77"></select>
+          </div>
+          <div class="campo-editor-v77">
+            <label for="editorMateriaV77">Materia</label>
+            <select id="editorMateriaV77"></select>
+          </div>
+        </div>
+
+        <div class="notas-editor-v77">
+          <div class="nota-trimestre-v77"><label for="nota1V77">1er trimestre</label><input id="nota1V77" type="number" min="0" max="100" step="1" inputmode="numeric" placeholder="—"></div>
+          <div class="nota-trimestre-v77"><label for="nota2V77">2do trimestre</label><input id="nota2V77" type="number" min="0" max="100" step="1" inputmode="numeric" placeholder="—"></div>
+          <div class="nota-trimestre-v77"><label for="nota3V77">3er trimestre</label><input id="nota3V77" type="number" min="0" max="100" step="1" inputmode="numeric" placeholder="—"></div>
+          <div class="nota-promedio-v77"><span>Promedio</span><strong id="promedioV77">—</strong></div>
+        </div>
+
+        <div class="editor-acciones-v77">
+          <span id="estadoEditorV77" aria-live="polite"></span>
+          <div class="acciones-editor-profesor-v77">
+            <button type="button" id="limpiarNotasProfesorV77" class="boton-eliminar">Borrar notas de esta materia</button>
+            <button type="button" id="guardarNotaProfesorV77" class="boton-guardar">Guardar calificaciones</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <div id="seccionInicio" class="admin-section">
+      <div class="estadisticas-admin">
+        <article class="tarjeta-estadistica"><span>Profesores</span><strong id="statProfesores">0</strong></article>
+        <article class="tarjeta-estadistica"><span>Estudiantes</span><strong id="statEstudiantes">0</strong></article>
+        <article class="tarjeta-estadistica"><span>Materias</span><strong id="statMaterias">0</strong></article>
+        <article class="tarjeta-estadistica"><span>Cursos</span><strong id="statCursos">0</strong></article>
+      </div>
+
+
+    </div>
+
+    <section id="seccionProfesores" class="admin-section" hidden>
+      <div class="seccion-cabecera"><div><span class="eyebrow">Administración</span><h2>Profesores</h2></div><button class="boton-buscar boton-compacto" onclick="abrirProfesor()">+ Nuevo profesor</button></div>
+      <div id="formInlineProfesores" class="formulario-inline" hidden></div>
+      <div class="tabla-contenedor"><table class="tabla-admin"><thead><tr><th>Nombre</th><th>Correo</th><th>Curso</th><th>Tipo</th><th>Acciones</th></tr></thead><tbody id="tablaProfesores"></tbody></table></div>
+    </section>
+
+    <section id="seccionEstudiantes" class="admin-section" hidden>
+      <div class="seccion-cabecera"><div><span class="eyebrow">Administración</span><h2>Estudiantes</h2></div><button class="boton-buscar boton-compacto" onclick="abrirEstudiante()">+ Nuevo estudiante</button></div>
+      <div id="formInlineEstudiantes" class="formulario-inline" hidden></div>
+      <div id="filtrosEstudiantesV75" class="v75-student-tools" aria-label="Filtros de estudiantes">
+        <div class="v75-field">
+          <label for="filtroCursoEstudiantes">Curso</label>
+          <select id="filtroCursoEstudiantes">
+            <option value="">Todos los cursos</option>
+          </select>
+        </div>
+        <div class="v75-field v75-search-field">
+          <label for="buscarEstudiantesDirector">Buscar estudiante</label>
+          <input id="buscarEstudiantesDirector" type="search" placeholder="Nombre o apellido..." autocomplete="off">
+        </div>
+      </div>
+      <div class="tabla-contenedor"><table class="tabla-admin"><thead><tr><th>CI</th><th>Nombre</th><th>Curso</th><th>Paralelo</th><th>Acciones</th></tr></thead><tbody id="tablaEstudiantes"></tbody></table></div>
+    </section>
+
+    <section id="seccionMaterias" class="admin-section" hidden>
+      <div class="seccion-cabecera"><div><span class="eyebrow">Administración</span><h2>Materias</h2></div><button class="boton-buscar boton-compacto" onclick="abrirMateria()">+ Nueva materia</button></div>
+      <div id="formInlineMaterias" class="formulario-inline" hidden></div>
+      <div class="tabla-contenedor"><table class="tabla-admin"><thead><tr><th>Materia</th><th>Campo</th><th>Acciones</th></tr></thead><tbody id="tablaMaterias"></tbody></table></div>
+    </section>
+
+    <section id="seccionCursos" class="admin-section" hidden>
+      <div class="seccion-cabecera"><div><span class="eyebrow">Administración</span><h2>Cursos</h2></div><button class="boton-buscar boton-compacto" onclick="abrirCurso()">+ Nuevo curso</button></div>
+      <div id="formInlineCursos" class="formulario-inline" hidden></div>
+      <div class="tabla-contenedor"><table class="tabla-admin"><thead><tr><th>Curso</th><th>Paralelo</th><th>Acciones</th></tr></thead><tbody id="tablaCursos"></tbody></table></div>
+    </section>
+
+    </div><!-- /.gb-dashboard-content -->
+  </section>
+</main>
+
+<div id="toast" class="toast" aria-live="polite"></div>
+
+<!-- Supabase JS: CDN principal con respaldo por si jsDelivr está bloqueado o falla. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  if (!window.supabase) {
+    document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>');
+  }
+</script>
+<script>
+  if (window.supabase) {
+    document.write('<script src="js/conexion.js?v=auditoria-2026-10-15-r1"><\/script>');
+    document.write('<script src="js/admin.js?v=auditoria-2026-10-15-r1"><\/script>');
+    document.write('<script src="js/director.js?v=auditoria-2026-10-15-r1"><\/script>');
+    document.write('<script src="js/profesor.js?v=auditoria-2026-10-15-r1"><\/script>');
+    document.write('<script src="js/interfaz.js?v=auditoria-2026-10-15-r1"><\/script>');
+  } else {
+    document.write('<div role="alert" style="position:fixed;z-index:99999;left:16px;right:16px;bottom:16px;padding:16px 18px;border:1px solid #ef4444;border-radius:12px;background:#fff1f2;color:#991b1b;font:600 14px/1.5 system-ui,sans-serif;box-shadow:0 8px 30px #0002">No se pudo cargar la librería de conexión. Comprueba tu conexión a Internet o si el navegador bloquea los CDN y vuelve a cargar la página.</div>');
+  }
+</script>
+
+</body>
+</html>

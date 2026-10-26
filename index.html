@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#edf2fb" id="themeColor" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Germán Busch" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>U.E. Germán Busch · Consulta de Notas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/consulta-saas.css" />
+</head>
+<body>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="ptr" id="ptr" aria-hidden="true"><div class="ptr-inner">↻</div></div>
+  <main class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="crest brand-mark-logo"><img src="assets/logo-original.png" alt="" /></div>
+        <div class="brand-text"><b>U.E. Germán Busch</b><div class="sub">Gestión 2026 · Consulta académica</div></div>
+      </div>
+      <div class="actions"><div class="online"><i></i><span>En línea</span></div>
+        <button class="icon" id="themeToggle" aria-label="Cambiar tema">
+          <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+      </div>
+    </header>
+    <form class="search" id="formNotas" novalidate>
+      <label for="ciInput">CI</label><input id="ciInput" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Ingresa tu carnet de identidad" aria-label="Carnet de identidad" />
+      <button type="submit" class="primary" id="btnConsultar"><span class="spinner" aria-hidden="true"></span><span class="btn-label">Consultar</span><svg class="btn-check" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </form>
+    <section class="empty-state" id="emptyState">
+      <div class="empty-visual"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <h2>Aún no consultaste tus notas</h2><p>Ingresa tu Carnet de Identidad en el buscador de arriba para ver tu rendimiento académico completo de la gestión 2026.</p>
+    </section>
+    <section class="grid" id="resultsSection" hidden>
+      <div class="col-left">
+        <div class="label">Perfil del estudiante</div>
+        <section class="card profile"><div class="avatar" id="avatar">—</div><div class="profile-info"><div class="pname" id="studentName">—</div><div class="pmeta">CI <span id="studentCI">—</span></div><div class="sub student-meta"><span id="studentYear">Gestión 2026</span> · <span id="studentCourse">—</span> · <span id="studentParallel">—</span></div></div></section>
+        <div class="label">Resumen académico</div>
+        <section class="card summary">
+          <div class="sumtop"><div class="sumleft"><div class="eyebrow">Promedio general</div><div class="big"><span id="avgValue">—</span><small> /100</small></div><div class="note" id="averageNote">Promedio de materias con nota final</div></div>
+            <div class="stats"><div class="ring" id="ring" style="--pct:0"><span id="ringPct">0%</span></div><div class="statcol"><div class="statline"><strong class="green" id="passes">0</strong><span><b>Aprobadas</b><br><span id="passText">materias</span></span></div><div class="statline"><strong class="red" id="fails">0</strong><span><b>Reprobadas</b><br><span id="failText">materias</span></span></div></div></div>
+          </div>
+          <div class="quicktitle">Rendimiento por trimestre</div><div class="quarters" id="quarters"></div>
+          <div class="summary-foot"><span>Materias registradas</span><strong id="subjectCount">—</strong></div>
+        </section>
+      </div>
+      <div class="col-right"><div class="label">Materias y calificaciones</div>
+        <section class="card subjects"><div class="subjecthead"><div><b>Lista de materias</b><div class="sub" id="subjectsMeta">—</div></div><span class="table-badge">Gestión 2026</span></div>
+          <div class="table-wrap"><table class="grades-table"><thead><tr><th>Materia</th><th>T1</th><th>T2</th><th>T3</th><th>Final</th><th>Estado</th></tr></thead><tbody id="subjectsBody"><tr><td colspan="6">Consulta tu CI para ver tus notas.</td></tr></tbody></table></div>
+          <div class="mobile-subjects" id="subjectsCards"></div>
+          <div class="subjects-foot"><span>Promedio general</span><strong id="courseAvg">—</strong></div>
+        </section>
+      </div>
+    </section>
+    <footer class="app-footer">© 2026 U.E. TEC. HUM. Germán Busch · Consulta pública de calificaciones</footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/conexion.js"></script>
+  <script src="js/consulta-saas.js"></script>
+</body></html>

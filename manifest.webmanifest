@@ -1,0 +1,17 @@
+{
+  "id": "./index.html",
+  "name": "U.E. Germán Busch · Consulta de Notas",
+  "short_name": "Germán Busch",
+  "description": "Consulta académica de calificaciones de la U.E. Germán Busch.",
+  "lang": "es-BO",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#edf2fa",
+  "theme_color": "#edf2fa",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
